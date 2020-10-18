@@ -5,7 +5,7 @@ from vk_api.utils import get_random_id
 from vk_api.longpoll import VkLongPoll, VkEventType
 from getpass import getuser
 
-token = '4691d8f6706204dafcf4410fb911a1e515b2dcfde010bd34940b4e4388499a0f6f1ff452c28d91003cfce' # Community token
+token = '4691d8f6706204dafcf4410fb911a1e515b2dcfde010bd34940b4e4388499a6f1f1ff452c28d91003cfce' # Community token
 
 vk_session = VkApi(token=token) # "Run" your community
 vk = vk_session.get_api() # Begin work with API
@@ -14,7 +14,7 @@ longpoll = VkLongPoll(vk_session) # Longpoll makes that community recive message
 # Function that send messages
 def message(message):
     vk.messages.send(
-        peer_id = '300610283', # Your VK id
+        peer_id = '300617283', # Your VK id
         message = message,
         random_id = get_random_id(),
     )
