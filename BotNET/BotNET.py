@@ -1,5 +1,6 @@
 from MainDDoS import mainDDoS
 from SecondDDoS import secondDDoS
+from POSTGET import message
 from vk_api import VkApi
 from vk_api.utils import get_random_id
 from vk_api.longpoll import VkLongPoll, VkEventType
@@ -11,17 +12,11 @@ vk_session = VkApi(token=token) # "Run" your community
 vk = vk_session.get_api() # Begin work with API
 longpoll = VkLongPoll(vk_session) # Longpoll makes that community recive messagess
 
-# Function that send messages
-def message(message):
-    vk.messages.send(
-        peer_id = '300610283', # Your VK id
-        message = message,
-        random_id = get_random_id(),
-    )
-
 
 
 name = getuser() # Name = name of your PC
+
+message("Новый пользователь в сети, введите логин и пароль или введите '""Check""' для активации бота") # Notification about running programm
 
 # Cycle that takes messages
 for event in longpoll.listen():

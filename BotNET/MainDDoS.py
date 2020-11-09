@@ -2,6 +2,7 @@ from vk_api import VkApi
 from vk_api.utils import get_random_id
 from vk_api.longpoll import VkLongPoll, VkEventType
 from POSTGET import postDDoS, getDDoS
+from POSTGET import message
 
 token = '4691d8f6706204dafcf4410fb911a1e515b2dcfde010bd34940b4e4388499a0f6f1ff452c28d91003cfce' # Community token
 
@@ -11,14 +12,13 @@ longpoll = VkLongPoll(vk_session) # Longpoll makes that community recive message
 
 requestIsEnd = False
 
-# Function that send messages
-def message(message):
-    vk.messages.send(
-        peer_id = '300610283', # Your VK id
-        message = message,
-        random_id = get_random_id(),
-    )
-
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+#                                                             #
+#       Here is very complicated part of code. There is       #
+#       a lot of cycles and notifications. Don't try          #
+#       to understand that. It's works and i am happy         #
+#                                                             #
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 def mainDDoS(): # Main function with notification
     try:
