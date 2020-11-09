@@ -1,8 +1,6 @@
 import requests
 from vk_api import VkApi
 from vk_api.utils import get_random_id
-from vk_api.longpoll import VkLongPoll, VkEventType
-from getpass import getuser
 
 token = '4691d8f6706204dafcf4410fb911a1e515b2dcfde010bd34940b4e4388499a0f6f1ff452c28d91003cfce'  # Community token
 vk_session = VkApi(token=token)  # "Run" your community
