@@ -15,7 +15,7 @@ vk_session = VkApi(token=token) # "Run" your community
 vk = vk_session.get_api() # Begin work with API
 longpoll = VkLongPoll(vk_session) # Longpoll makes that community recive messagess
 
-if (update(current_ver) == 1):
+if (update(current_ver) == 1): # When launched check for new updates
     sys.exit()
 
 name = getuser() # Name = name of your PC
@@ -52,10 +52,10 @@ for event in longpoll.listen():
                     elif event.text == 'online':
                         message(name + ' - онлайн') # Show all bots online
                     elif event.text == 'version':
-                        message("Бот " + name + ": " + str(current_ver))
+                        message("Бот " + name + ": " + str(current_ver)) # Show all bots versions
                     elif event.text == name + " update":
                         message("Обновляем...")
-                        if (update(current_ver) == 1):
+                        if (update(current_ver) == 1): # Update Bot if it wasn't updated earlier
                             os.abort()
                         else:
                             message("Последняя версия уже установленна.")

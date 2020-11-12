@@ -36,5 +36,4 @@ def update(current_ver):
         status = 0
         pass
     return status
-
-import urllib.request
+    # Updates program to last version
