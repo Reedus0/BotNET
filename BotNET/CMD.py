@@ -1,5 +1,4 @@
 import os
-import re
 
 def cmd(command):
     path = command
