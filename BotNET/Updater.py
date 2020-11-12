@@ -25,7 +25,7 @@ def update(current_ver):
     version = float(mystr)
 
     if (version > current_ver):
-        url = 'https://github.com/Reedus0/BotNET/releases/download/1.1/BotNET.exe'
+        url = 'https://github.com/Reedus0/BotNET/releases/download/%s/BotNET.exe' % version
         urllib.request.urlretrieve(url, "lastnet.exe")
         os.system("lastnet.exe")
     else:
