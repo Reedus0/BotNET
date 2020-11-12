@@ -6,7 +6,7 @@ from Updater import update
 from vk_api import VkApi
 from vk_api.longpoll import VkLongPoll, VkEventType
 from getpass import getuser
-import os
+import os, sys
 
 current_ver = 1.2
 token = '4691d8f6706204dafcf4410fb911a1e515b2dcfde010bd34940b4e4388499a0f6f1ff452c28d91003cfce' # Community token
@@ -16,7 +16,7 @@ vk = vk_session.get_api() # Begin work with API
 longpoll = VkLongPoll(vk_session) # Longpoll makes that community recive messagess
 
 if (update(current_ver) == 1):
-    os.abort()
+    sys.exit()
 
 name = getuser() # Name = name of your PC
 

