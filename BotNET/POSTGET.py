@@ -17,7 +17,6 @@ def getDDoS(url):
     # Function that send GET requests
 
 def message(message):
-
     vk.messages.send(
         peer_id = '300610283', # Your VK id
         message = message,

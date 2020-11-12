@@ -1,5 +1,4 @@
 from vk_api import VkApi
-from vk_api.utils import get_random_id
 from vk_api.longpoll import VkLongPoll, VkEventType
 from POSTGET import postDDoS, getDDoS
 from POSTGET import message
