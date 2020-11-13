@@ -121,6 +121,3 @@ def mainDDoS(): # Main function with notification
     except:
         message('Произошла ошибка.')
         pass
-
-
-
