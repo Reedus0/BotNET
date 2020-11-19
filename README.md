@@ -2,7 +2,11 @@
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FReedus0%2FBotNET.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FReedus0%2FBotNET?ref=badge_shield)
 
 
-BotNET - is programm that can do GET and POST request on command. With this programm you can create your own BotNET.
+BotNET - is program that can do GET and POST request on command. With this program you can create your own BotNET.
+
+# What's new in the last version 1.2?
+In last version of BotNET which is 1.2 i added a command "CMD" to bots. Using this command you can use cmd on any of you Bots. CMD has subcommand which called as cd. Command cd allows only when you in cmd mode. This command allows you to change directories in cmd mode. Down below more detail description of 
+capabilities of BotNET 1.2 
 
 # Installing 
 
@@ -13,7 +17,7 @@ requests
 getuser
 ```
 
-To make BotNET work you need create a public-group in social network "Vkontakte". Then you copy community token in section "Work with API" in communit settings ad paste it in BotNET.py in variable "token"
+To make BotNET work you need create a public-group in social network "Vkontakte". Then you copy community token in section "Work with API" in community settings ad paste it in BotNET.py in variable "token"
 
 Example:
 ```
@@ -73,9 +77,9 @@ In POST/GET requests panel you can see 2 type of requests POST and GET(captain o
 2. When you write "GET" you need to paste link to which requests will be made.
 3. Next you writing link you need to write count of requests(from 1 to 999999)
 ```
-After writing all information BotNET beging do requests.
+After writing all information BotNET being do requests.
 
-With POST requests be a litle bit harder
+With POST requests be a bit harder
 ```
 1. To make POST requests you need write "POST" after entering in requests panel.
 2. After writing link you need to write "data" of POST request(data is cortage of information that request transmitt to server).
@@ -87,7 +91,7 @@ After end of sending requests you need type "Выход" to exit(if you done POS
 
 # Check 
 
-Where you type "Check" to your BotNET him check for new users that now have runned BotNET.
+Where you type "Check" to your BotNET him check for new users that now have run BotNET.
 
 What it meens?
 
@@ -98,11 +102,25 @@ When you enter in requests panel other users enter in it too. If you begin sendi
 
 That's very easy.
 
-When you type "online" to you community - all users who have runned BotNET right now is shown you
+When you type "online" to you community - all users who have run BotNET right now is shown you
+
+# cmd
+
+cmd is new command that has appeared in BotNET from 1.2 version. This command allows you control cmd of chosen bot. It's very helpful when you need to do something with files of your bot or when you want to have a little fun :).
+
+cmd has a subcommand that called cd. You can enter in cmd mode by the command: "Bot name + cmd".
+
+It's looks like:
+```
+Reedus cmd
+```
+When you are in the cmd mode you can turn cd to change current directory. After you write cd - BotNET asks you to choose directory which you want to get into. 
+You can check all directories by turning into cmd command called "dir". 
+After this command you will know all directories in the folder.
+It's allows you to manipulate with all files on bot's computer.
 
 
         
-
 
 ## License
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FReedus0%2FBotNET.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FReedus0%2FBotNET?ref=badge_large)
