@@ -4,9 +4,8 @@
 
 BotNET - is program that can do GET and POST request on command. With this program you can create your own BotNET.
 
-# What's new in the last version 1.2?
-In last version of BotNET which is 1.2 i added a command "CMD" to bots. Using this command you can use cmd on any of you Bots. CMD has subcommand which called as cd. Command cd allows only when you in cmd mode. This command allows you to change directories in cmd mode. Down below more detail description of 
-capabilities of BotNET 1.2 
+# What's new in the last version 1.3?
+In 1.3 version BotNET was fully reworked and moved to new messenger: Telegram. 
 
 # Installing 
 

