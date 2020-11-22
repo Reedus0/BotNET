@@ -1,0 +1,3 @@
+pyTelegramBotApi==3.7.3
+requests==2.22.0
+getpass3==1.2

