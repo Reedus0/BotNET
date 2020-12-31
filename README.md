@@ -1,4 +1,4 @@
-# BotNET
+﻿# BotNET
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FReedus0%2FBotNET.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FReedus0%2FBotNET?ref=badge_shield)
 
 
@@ -11,7 +11,7 @@ In 1.3 version BotNET was fully reworked and moved to new messenger: **Telegram*
 
 To use BotNET you need to install you can type in your console:
 ```
-pip install -r requirements.txt
+pip install -r requirements.txt            
 ```
  
 Or you can install each one by one:
@@ -59,7 +59,7 @@ In POST/GET requests panel you can see 2 type of requests POST and GET(captain o
 ```
 1. To make GET requests you need write "GET" after entering in requests panel.
 2. When you write "GET" you need to paste link to which requests will be made.
-3. Next you writing link you need to write count of requests(from 1 to 999999)
+3. Next you writing link you need to write count of requests(from 1 to 99999)
 ```
 After writing all information BotNET being do requests.
 
@@ -67,7 +67,7 @@ With POST requests be a bit harder
 ```
 1. To make POST requests you need write "POST" after entering in requests panel.
 2. After writing link you need to write "data" of POST request(data is cortage of information that request transmitt to server).
-3. Next step you need again write count of requests(from 1 to 999999)
+3. Next step you need again write count of requests(from 1 to 99999)
 ```
 After writing all information BotNET beging do requests.
 
